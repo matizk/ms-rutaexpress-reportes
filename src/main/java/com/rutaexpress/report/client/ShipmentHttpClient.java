@@ -4,6 +4,7 @@ import com.rutaexpress.report.domain.ShipmentSnapshot;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Component
+@Profile("!kafka")
 public class ShipmentHttpClient implements ShipmentReader {
     private final RestClient restClient;
 
