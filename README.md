@@ -6,6 +6,14 @@ Daniel informó Reportes activo dentro del AWS existente. El caso integrado `RX-
 
 Microservicio Spring Boot de reportería operacional para RutaExpress.
 
+## EV3 con Kafka
+
+Con el perfil `kafka`, el consumidor recibe eventos de Envíos y actualiza `report_shipments` en una base PostgreSQL propia. La tabla conserva el último estado de cada envío, incluso si Kafka reentrega un evento anterior. Las consultas de KPI y destinos leen esa tabla.
+
+Los brokers se indican en `KAFKA_BOOTSTRAP_SERVERS`. La conexión a PostgreSQL se configura con `REPORT_DB_URL`, `REPORT_DB_USER` y `REPORT_DB_PASSWORD`. El Compose de EV3 está en el repositorio Envíos.
+
+El BFF envía `/api/report/kafka/topics` al microservicio independiente `ms-rutaexpress-kafka-admin`. Reportes sirve los KPI y los destinos. Prometheus consulta `/actuator/prometheus` en la red interna.
+
 ## Responsabilidad
 
 Expone consultas de solo lectura. En Entrega 1 obtiene snapshots desde
@@ -17,9 +25,7 @@ frontend.
 Angular -> BFF -> report -> shipments
 ```
 
-En una etapa posterior, Kafka puede alimentar una proyección propia de
-reportería. La API pública no cambia: sólo se reemplaza el adaptador interno de
-lectura.
+Este modo de consulta HTTP se usa al arrancar sin el perfil `kafka`. En EV3, las mismas rutas leen la proyección local de Reportes.
 
 ## Endpoints
 
